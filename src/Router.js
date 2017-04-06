@@ -1,70 +1,75 @@
 import React from "react";
-import {assertTrue} from "./RouterUtils.js";
-import pathToRegexp from "path-to-regexp";
+import {
+  computePathRegexMap,
+  getPathFromHash,
+  enableDebugMode,
+  debug
+} from "./RouterUtils.js";
 
 class Router extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        const hashChangeListener = this.routeUpdate.bind(this);
-
-        window.addEventListener("hashchange", hashChangeListener);
-
-        this.state= {
-            currentLocation: Router.getPathFromHash(window.location.hash),
-            pathMap: Router.computePathRegexMap(this.props.children), 
-            hashChangeListener,
-        }
+    if (props.debug) {
+      enableDebugMode();
     }
 
-    componentWillUnmount() {
-        window.removeEventListener("hashchange", this.state.hashChangeListener);
+    // Save reference so we can remove event listener later
+    const hashChangeListener = this.routeUpdate.bind(this);
+
+    window.addEventListener("hashchange", hashChangeListener);
+
+    this.state = {
+      currentLocation: getPathFromHash(window.location.hash),
+      pathMap: computePathRegexMap(this.props.children),
+      hashChangeListener,
     }
+  }
 
-    getChildContext() {
-        return {
-            currentLocation: this.state.currentLocation
-        }
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.state.hashChangeListener);
+  }
+
+  getChildContext() {
+    return {
+      currentLocation: this.state.currentLocation
     }
+  }
 
-    render() {
-        let pathMatch = this.state.pathMap.find((pathObj) => {
-            if(pathObj.regex.exec(this.state.currentLocation)) {
-                console.log("Match for route: " + pathObj.component.props.path);
-                return true;
-            }
-            console.warn("No matches found for route: " + this.state.currentLocation);
-            return false;
-        });
+  render() {
+    let pathMatch = this.state.pathMap.find((pathObj) => {
+      if (pathObj.regex.exec(this.state.currentLocation)) {
+        debug("Match for route: " + pathObj.component.props.path);
+        return true;
+      }
+      return false;
+    });
 
-        return (<div>{pathMatch.component}</div>);
+    if (pathMatch) {
+      return (<div>{pathMatch.component}</div>);
     }
-
-    routeUpdate(changeEvent) {
-        this.setState({
-            currentLocation: Router.getPathFromHash(window.location.hash)
-        });
+    else {
+      debug("No matches found for route: " + this.state.currentLocation);
+      return (<div></div>);
     }
+  }
 
-    static getPathFromHash(hash) {
-        return hash.substring(hash.indexOf("#")+1);
-    }
-
-    static computePathRegexMap(childComponents) {
-        return childComponents.map((childComponent) => {
-            assertTrue("Child of Router not Route", childComponent.type.name === "Route");
-            assertTrue("Route has no path", childComponent.props.path);
-
-            return {
-                regex: pathToRegexp(childComponent.props.path),
-                component: childComponent,
-            }
-        });
-    }
+  routeUpdate(changeEvent) {
+    this.setState({
+      currentLocation: getPathFromHash(window.location.hash)
+    });
+  }
 }
 
 Router.childContextTypes = {
-    currentLocation: React.PropTypes.string
+  currentLocation: React.PropTypes.string
+};
+
+Router.propTypes = {
+  /**
+   * Enable debug mode
+   */
+  debug: React.PropTypes.bool
 };
 
 export default Router;
