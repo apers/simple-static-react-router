@@ -1,13 +1,29 @@
 import React from 'react';
 
 class Route extends React.Component {
-    render() {
-        return (<div>{this.props.children}</div>);
+  render() {
+    let clonedChildren;
+
+    if (!Array.isArray(this.props.children)) {
+      clonedChildren = React.cloneElement(this.props.children, {
+        router: this.context.router,
+      });
     }
+    else {
+      clonedChildren = this.props.children.map((component, index) => {
+        return React.cloneElement(component, {
+          key: component.type.name + index,
+          router: this.context.router,
+        });
+      });
+    }
+
+    return (<div>{clonedChildren}</div>);
+  }
 }
 
 Route.contextTypes = {
-  currentLocation: React.PropTypes.string
+  router: React.PropTypes.object
 };
 
 export default Route;

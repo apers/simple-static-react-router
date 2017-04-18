@@ -3,7 +3,8 @@ import {
   computePathRegexMap,
   getPathFromHash,
   enableDebugMode,
-  debug
+  debug,
+  constructPathParamObject
 } from "./RouterUtils.js";
 
 class Router extends React.Component {
@@ -19,11 +20,19 @@ class Router extends React.Component {
 
     window.addEventListener("hashchange", hashChangeListener);
 
-    this.state = {
+    const router = {
       currentLocation: getPathFromHash(window.location.hash),
+    };
+
+    this.state = {
+      router,
       pathMap: computePathRegexMap(this.props.children),
       hashChangeListener,
     }
+  }
+
+  componentWillMount() {
+    this.routeUpdate();
   }
 
   componentWillUnmount() {
@@ -32,37 +41,52 @@ class Router extends React.Component {
 
   getChildContext() {
     return {
-      currentLocation: this.state.currentLocation
+      router: this.state.router,
     }
   }
 
   render() {
+    const {
+      router
+    } = this.state;
+
+    if (router.component) {
+      return (<div>{router.component}</div>);
+    }
+    else {
+      debug("No matches found for route: " + this.state.router.currentLocation);
+      return (<div></div>);
+    }
+  }
+
+  routeUpdate(changeEvent) {
+    let currentLocation = getPathFromHash(window.location.hash);
+
+    let pathParams = null;
     let pathMatch = this.state.pathMap.find((pathObj) => {
-      if (pathObj.regex.exec(this.state.currentLocation)) {
+      let regexObj = pathObj.regex.exec(currentLocation);
+      if (regexObj) {
+        pathParams = constructPathParamObject(regexObj, pathObj.keys);
         debug("Match for route: " + pathObj.component.props.path);
         return true;
       }
       return false;
     });
 
-    if (pathMatch) {
-      return (<div>{pathMatch.component}</div>);
-    }
-    else {
-      debug("No matches found for route: " + this.state.currentLocation);
-      return (<div></div>);
-    }
-  }
+    const router = this.state.router;
 
-  routeUpdate(changeEvent) {
+    router['currentLocation'] = currentLocation;
+    router['component'] = pathMatch.component;
+    router['params'] = pathParams;
+
     this.setState({
-      currentLocation: getPathFromHash(window.location.hash)
+      router,
     });
   }
 }
 
 Router.childContextTypes = {
-  currentLocation: React.PropTypes.string
+  router: React.PropTypes.object
 };
 
 Router.propTypes = {
