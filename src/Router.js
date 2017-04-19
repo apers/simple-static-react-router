@@ -46,12 +46,8 @@ class Router extends React.Component {
   }
 
   render() {
-    const {
-      router
-    } = this.state;
-
-    if (router.component) {
-      return (<div>{router.component}</div>);
+    if (this.state.component) {
+      return (<div>{this.state.component}</div>);
     }
     else {
       debug("No matches found for route: " + this.state.router.currentLocation);
@@ -60,6 +56,7 @@ class Router extends React.Component {
   }
 
   routeUpdate(changeEvent) {
+    debug("Hash update: ", changeEvent);
     let currentLocation = getPathFromHash(window.location.hash);
 
     let pathParams = null;
@@ -75,9 +72,19 @@ class Router extends React.Component {
 
     const router = this.state.router;
 
+    if(pathMatch) {
+      this.setState({
+        component: pathMatch.component,
+      });
+      router['params'] = pathParams;
+    } else {
+      this.setState({
+        component: null,
+      });
+      router['params'] = null;
+    }
+
     router['currentLocation'] = currentLocation;
-    router['component'] = pathMatch.component;
-    router['params'] = pathParams;
 
     this.setState({
       router,
