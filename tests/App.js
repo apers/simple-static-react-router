@@ -13,7 +13,7 @@ class App extends React.Component {
             <Route path="/a/:user?/:user2?">
               <A/>
             </Route>
-            <Route path="/b">
+            <Route path="/b/:buser?">
               <B/>
             </Route>
           </Router>
