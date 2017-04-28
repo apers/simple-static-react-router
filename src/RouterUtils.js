@@ -23,6 +23,7 @@ export function getPathFromHash(hash) {
 }
 
 export function computePathRegexMap(childComponents) {
+  debug("computePathRegexMap, childComponents: ", childComponents);
   return childComponents.map((childComponent) => {
     assertTrue("Child of Router not Route", childComponent.type.name === "Route");
     assertTrue("Route has no path", childComponent.props.path);
