@@ -8,11 +8,11 @@ class RouterTest extends React.Component {
   render() {
     return (
         <div className="App">
-          <Router debug>
+          <Router>
             <Route path="/a/:user?/:user2?">
               <A/>
             </Route>
-            <Route path="/b/:buser?">
+            <Route path="/b/:user?">
               <B/>
             </Route>
           </Router>
