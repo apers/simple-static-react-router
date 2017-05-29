@@ -4,7 +4,7 @@ let debugMode = false;
 
 export function assertTrue(message, condition) {
   if (!condition) {
-    debug(message);
+    debug("Expected condition to be true: " + message);
   }
 }
 
@@ -25,8 +25,8 @@ export function getPathFromHash(hash) {
 export function computePathRegexMap(childComponents) {
   debug("computePathRegexMap, childComponents: ", childComponents);
   return childComponents.map((childComponent) => {
-    assertTrue("Child of Router not Route", childComponent.type.name === "Route");
-    assertTrue("Route has no path", childComponent.props.path);
+    assertTrue("Child of Router is Route", childComponent.type.name === "Route");
+    assertTrue("Route has path", childComponent.props.path);
 
     let keys = [];
     const regex = pathToRegexp(childComponent.props.path, keys);

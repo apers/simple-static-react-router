@@ -2,7 +2,7 @@ import React from 'react';
 
 class B extends React.Component {
   render() {
-    return (<div className="B">B</div>);
+    return (<div className="B">this.props.router.params.username</div>);
   }
 }
 
