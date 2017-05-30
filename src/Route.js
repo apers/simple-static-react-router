@@ -22,8 +22,12 @@ class Route extends React.Component {
   }
 }
 
+Route.propTypes = {
+  path: React.PropTypes.string.isRequired,
+};
+
 Route.contextTypes = {
-  router: React.PropTypes.object
+  router: React.PropTypes.object,
 };
 
 export default Route;
