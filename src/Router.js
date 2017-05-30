@@ -24,9 +24,16 @@ class Router extends React.Component {
       currentLocation: getPathFromHash(window.location.hash),
     };
 
+    let childrenArray;
+    if(Array.isArray(this.props.children)) {
+      childrenArray = this.props.children;
+    } else {
+      childrenArray = [this.props.children];
+    }
+
     this.state = {
       router,
-      pathMap: computePathRegexMap(this.props.children),
+      pathMap: computePathRegexMap(childrenArray),
       hashChangeListener,
     }
   }
@@ -65,6 +72,7 @@ class Router extends React.Component {
       if (regexObj) {
         pathParams = constructPathParamObject(regexObj, pathObj.keys);
         debug("Match for route: " + pathObj.component.props.path);
+        debug("From pathObj" + pathObj);
         return true;
       }
       return false;
