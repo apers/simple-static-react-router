@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import {
   computePathRegexMap,
   getPathFromHash,
@@ -101,14 +103,14 @@ class Router extends React.Component {
 }
 
 Router.childContextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object.isRequired
 };
 
 Router.propTypes = {
   /**
    * Enable debug mode
    */
-  debug: React.PropTypes.bool
+  debug: PropTypes.bool
 };
 
 export default Router;

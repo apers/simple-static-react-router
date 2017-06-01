@@ -1,7 +1,7 @@
 module.exports = {
   entry: "./src/simple-static-react-router.js",
   output: {
-    filename: "./dist/simple-static-react-router.js",
+    filename: "./index.js",
     library : "simple-static-react-router",
     libraryTarget: "umd"
   },

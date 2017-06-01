@@ -1,6 +1,6 @@
 {
   "name": "simple-static-react-router",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "description": "Simple static routing components for React",
   "main": "./dist/simple-static-react-router.js",
   "scripts": {
@@ -8,6 +8,9 @@
     "test-watch": "./node_modules/karma/bin/karma start",
     "build": "./node_modules/webpack/bin/webpack.js --progress --colors"
   },
+  "files": [
+    "index.js"
+  ],
   "author": "Audun Pers <pers87@gmail.com>",
   "license": "ISC",
   "devDependencies": {
@@ -27,7 +30,8 @@
     "mocha-loader": "^1.1.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "webpack": "^2.4.1"
+    "webpack": "^2.4.1",
+    "prop-types": "^15.5.10"
   },
   "dependencies": {
     "path-to-regexp": "^1.7.0"
