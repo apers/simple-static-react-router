@@ -40,6 +40,10 @@ class Router extends React.Component {
     }
   }
 
+  componentWillReceiveProps() {
+    this.routeUpdate();
+  }
+
   componentWillMount() {
     this.routeUpdate();
   }
@@ -56,11 +60,11 @@ class Router extends React.Component {
 
   render() {
     if (this.state.component) {
-      return (<div>{this.state.component}</div>);
+      return (<div className="router">{this.state.component}</div>);
     }
     else {
       debug("No matches found for route: " + this.state.router.currentLocation);
-      return (<div></div>);
+      return (<div className="router"></div>);
     }
   }
 
@@ -81,24 +85,22 @@ class Router extends React.Component {
     });
 
     const router = this.state.router;
-
-    if(pathMatch) {
-      this.setState({
-        component: pathMatch.component,
-      });
-      router['params'] = pathParams;
-    } else {
-      this.setState({
-        component: null,
-      });
-      router['params'] = null;
-    }
-
     router['currentLocation'] = currentLocation;
 
-    this.setState({
-      router,
-    });
+
+    if (pathMatch) {
+      router['params'] = pathParams;
+      this.setState({
+        component: pathMatch.component,
+        router,
+      });
+    } else {
+      router['params'] = null;
+      this.setState({
+        component: null,
+        router,
+      });
+    }
   }
 }
 
