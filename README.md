@@ -1,4 +1,7 @@
 # Simple react router
+## Installation
+npm i simple-static-react-router
+
 ## Example usage:
 ```
 <div className="App">
