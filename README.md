@@ -4,11 +4,19 @@
 <div className="App">
   <Router>
     <Route path="/:user?">
-      <B/>
+      {...reactComponents}
     </Route>
     <Route path="/:user?/:user2?">
-      <A/>
+      {...reactComponents}
     </Route>
   </Router>
 </div>
 ```
+
+
+## Path
+Path regex uses: https://github.com/pillarjs/path-to-regexp
+
+## Params
+Path parameters available in ```context.router.params```
+
